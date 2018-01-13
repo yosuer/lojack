@@ -31,6 +31,18 @@ export default class App extends React.Component {
                 path: ownerCollection.entity._links.profile.href,
                 headers: {'Accept': 'application/schema+json'}
             }).then(schema => {
+                /**
+                 * Filter unneeded JSON Schema properties, like uri references and
+                 * subtypes ($ref).
+                 */
+                let props = schema.entity.properties;
+                Object.keys(props).forEach(function (prop) {
+                    if (props[prop].hasOwnProperty('format') && props[prop].format === 'uri') {
+                        delete props[prop];
+                    } else if (props[prop].hasOwnProperty('$ref')) {
+                        delete props[prop];
+                    }
+                });
                 this.schema = schema.entity;
                 this.links = ownerCollection.entity._links;
                 return ownerCollection;

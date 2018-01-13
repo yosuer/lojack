@@ -81,6 +81,7 @@ export default class OwnerList extends React.Component{
                         <th>PhoneNumber</th>
                         <th>Address</th>
                         <th>Country</th>
+                        <th>Manager</th>
                     </tr>
                     {owners}
                     </tbody>

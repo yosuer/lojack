@@ -19,6 +19,7 @@ export default class Owner extends React.Component{
                 <td>{this.props.owner.entity.phoneNumber}</td>
                 <td>{this.props.owner.entity.address}</td>
                 <td>{this.props.owner.entity.country}</td>
+                <td>{this.props.owner.entity.manager.name}</td>
                 <td>
                     <UpdateDialog owner={this.props.owner}
                                     attributes={this.props.attributes}
