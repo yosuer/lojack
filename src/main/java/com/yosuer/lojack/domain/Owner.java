@@ -3,19 +3,21 @@ package com.yosuer.lojack.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Version;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
 @Entity
 public class Owner {
 
-	@Id
-	@GeneratedValue
-	private Long id;
+	private @Id @GeneratedValue Long id;
 	private String fullName;
 	private String phoneNumber;
 	private String address;
 	private String country;
+
+	private @Version @JsonIgnore Long version;
 
 	public Owner() {
 	}

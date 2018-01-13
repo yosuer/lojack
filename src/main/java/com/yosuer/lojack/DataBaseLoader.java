@@ -16,9 +16,16 @@ public class DataBaseLoader implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Owner owner1 = new Owner("Jhonatan Z", "1568772707", "lavalle 222", "AR");
-		Owner owner2 = new Owner("Juanita C", "1569987446", "lavalle 111", "AR");
-		this.ownerRepository.save(owner1);
-		this.ownerRepository.save(owner2);
+		this.ownerRepository.save(
+				new Owner("Jhonatan Z", "1568772707", "lavalle 222", "AR"));
+		this.ownerRepository.save(
+				new Owner("Juanita C", "1569987446", "lavalle 111", "AR")
+		);
+		this.ownerRepository.save(
+				new Owner("Juaaas sa", "111111", "lavalle 111", "BR")
+		);
+		this.ownerRepository.save(
+				new Owner("Ju dasds", "222222", "lavalle 111", "AR")
+		);
 	}
 }
