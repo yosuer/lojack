@@ -8,11 +8,11 @@ import stompClient from './../websocket-listener';
 
 const root = '/api';
 
-export default class App extends React.Component {
+export default class AbmModel extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {owners: [], attributes: [], page: 1, pageSize: 2, links: {}};
+        this.state = {owners: [], attributes: [], page: 1, pageSize: 3, links: {}};
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
@@ -81,7 +81,7 @@ export default class App extends React.Component {
 
     onUpdate(owner, updatedOwner) {
         client({
-            method: 'PUT',
+            method: 'PATCH',
             path: owner.entity._links.self.href,
             entity: updatedOwner,
             headers: {
@@ -93,6 +93,9 @@ export default class App extends React.Component {
         }, response => {
             if (response.status.code === 412) {
                 alert('DENIED: Unable to update ' + owner.entity._links.self.href + '. Your copy is stale.');
+            }
+            if (response.status.code === 403) {
+                alert('DENIED: Unable to update ' + owner.entity._links.self.href + '. Do you havent permision');
             }
         });
     }

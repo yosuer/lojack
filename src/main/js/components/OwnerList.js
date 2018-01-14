@@ -1,6 +1,8 @@
 import React from 'react';
-import Owner from './Owner';
 import ReactDOM from 'react-dom';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
+import UpdateDialog from './UpdateDialog'
+import RaisedButton from 'material-ui/RaisedButton';
 
 export default class OwnerList extends React.Component{
 
@@ -44,16 +46,28 @@ export default class OwnerList extends React.Component{
         this.props.onNavigate(this.props.links.last.href);
     }
 
+    handleDelete(owner) {
+        this.props.onDelete(owner);
+    }
+
     render() {
         let pageInfo = this.props.page.hasOwnProperty("number") ?
             <h3>Owners - Page {this.props.page.number + 1} of {this.props.page.totalPages}</h3> : null;
-
-        let owners = this.props.owners.map(owner =>
-            <Owner key={owner.entity._links.self.href}
-                   owner={owner}
-                   onDelete={this.props.onDelete}
-                   onUpdate={this.props.onUpdate}
-                   attributes={this.props.attributes}/>
+        let rowOwners = this.props.owners.map(owner =>
+            <TableRow key={owner.entity._links.self.href}>
+                <TableRowColumn>{owner.entity.fullName}</TableRowColumn>
+                <TableRowColumn>{owner.entity.phoneNumber}</TableRowColumn>
+                <TableRowColumn>{owner.entity.address}</TableRowColumn>
+                <TableRowColumn>{owner.entity.country}</TableRowColumn>
+                <TableRowColumn>{owner.entity.manager.name}</TableRowColumn>
+                <TableRowColumn>
+                    <UpdateDialog owner={owner}
+                                  attributes={this.props.attributes}
+                                  onUpdate={this.props.onUpdate}>
+                    </UpdateDialog>
+                    <RaisedButton onClick={this.handleDelete.bind(this, owner)} label="Delete" secondary={true}/>
+                </TableRowColumn>
+            </TableRow>
         );
 
         let navLinks = [];
@@ -74,18 +88,21 @@ export default class OwnerList extends React.Component{
             <div>
                 {pageInfo}
                 <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
-                <table>
-                    <tbody>
-                    <tr>
-                        <th>FullName</th>
-                        <th>PhoneNumber</th>
-                        <th>Address</th>
-                        <th>Country</th>
-                        <th>Manager</th>
-                    </tr>
-                    {owners}
-                    </tbody>
-                </table>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHeaderColumn>FullName</TableHeaderColumn>
+                            <TableHeaderColumn>PhoneNumber</TableHeaderColumn>
+                            <TableHeaderColumn>Address</TableHeaderColumn>
+                            <TableHeaderColumn>Country</TableHeaderColumn>
+                            <TableHeaderColumn>Manager</TableHeaderColumn>
+                            <TableHeaderColumn>Actions</TableHeaderColumn>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {rowOwners}
+                    </TableBody>
+                </Table>
                 <div>
                     {navLinks}
                 </div>

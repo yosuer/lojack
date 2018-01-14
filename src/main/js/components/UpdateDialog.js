@@ -1,47 +1,73 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog';
 
 export default class extends React.Component {
 
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleOpen = this.handleOpen.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.state = {open: false};
     }
+
+    handleOpen() {
+        this.setState({open: true});
+    };
+
+    handleClose() {
+        this.setState({open: false});
+    };
 
     handleSubmit(e) {
         e.preventDefault();
         let updatedOwner = {};
         this.props.attributes.forEach(attribute => {
-            updatedOwner[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
+            updatedOwner[attribute] = this.refs[attribute].input.value.trim();
         });
         this.props.onUpdate(this.props.owner, updatedOwner);
-        window.location = "#";
+        this.handleClose();
     }
 
     render() {
-        let inputs = this.props.attributes.map(attribute =>
-            <p key={this.props.owner.entity[attribute]}>
-                <input type="text" placeholder={attribute}
-                       defaultValue={this.props.owner.entity[attribute]}
-                       ref={attribute} className="field" />
-            </p>
-        );
+        const actions = [
+            <FlatButton
+                label="Cancel"
+                primary={true}
+                onClick={this.handleClose}
+            />,
+            <FlatButton
+                label="Submit"
+                primary={true}
+                keyboardFocused={true}
+                onClick={this.handleSubmit}
+            />
+        ];
 
-        let dialogId = "updateOwner-" + this.props.owner.entity._links.self.href;
+        let inputs = this.props.attributes.map(attribute =>
+            <div key={this.props.owner.entity[attribute]}>
+                <TextField
+                           defaultValue={this.props.owner.entity[attribute]}
+                           floatingLabelText={attribute} ref={attribute} />
+                <br />
+            </div>
+        );
 
         return (
             <div key={this.props.owner.entity._links.self.href}>
-                <a href={"#" + dialogId}>Update</a>
-                <div id={dialogId} className="modalDialog">
-                    <div>
-                        <a href="#" title="Close" className="close">X</a>
-                        <h2>Update an owner</h2>
-                        <form>
-                            {inputs}
-                            <button onClick={this.handleSubmit}>Update</button>
-                        </form>
-                    </div>
-                </div>
+                <RaisedButton onClick={this.handleOpen.bind(this)} label="Update" />
+                <Dialog
+                    title="Update an owner"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.open}
+                    onRequestClose={this.handleClose}
+                >
+                    {inputs}
+                </Dialog>
             </div>
         )
     }
