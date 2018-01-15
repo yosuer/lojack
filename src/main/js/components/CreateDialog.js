@@ -1,73 +1,57 @@
 import React from 'react';
-import FlatButton from 'material-ui/FlatButton';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
+import {Button, Col, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 
 export default class CreateDialog extends React.Component {
 
     constructor(props) {
         super(props);
+        this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleOpen = this.handleOpen.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.state = {open: false};
+        this.state = {modal: false};
     }
 
-    handleOpen() {
-        this.setState({open: true});
-    };
-
-    handleClose() {
-        this.setState({open: false});
-    };
+    toggle() {
+        this.setState({
+            modal: !this.state.modal
+        })
+    }
 
     handleSubmit(e) {
         e.preventDefault();
         let newOwner = {};
         this.props.attributes.forEach(attribute => {
-            newOwner[attribute] = this.refs[attribute].input.value.trim();
+            newOwner[attribute] = this['input-' + attribute].value.trim();
         });
         this.props.onCreate(newOwner);
         this.props.attributes.forEach(attribute => {
-            this.refs[attribute].input.value = '';
+            this['input-' + attribute].value = '';
         });
-        this.handleClose();
+        this.setState({
+            modal: false
+        });
     }
 
     render() {
         let inputs = this.props.attributes.map(attribute =>
-            <div key={attribute}>
-                <TextField floatingLabelText={attribute} ref={attribute} />
-                <br />
-            </div>
+            <FormGroup key={attribute} row>
+                <Label for={'input-' + attribute} sm={3}>{attribute}</Label>
+                <Col sm={8}>
+                    <Input innerRef={(input) => this['input-'+attribute] = input}
+                           id={'input-' + attribute} placeholder={attribute}/>
+                </Col>
+            </FormGroup>
         );
-        const actions = [
-            <FlatButton
-                label="Cancel"
-                primary={true}
-                onClick={this.handleClose}
-            />,
-            <FlatButton
-                label="Create"
-                primary={true}
-                keyboardFocused={true}
-                onClick={this.handleSubmit}
-            />
-        ];
 
         return (
             <div>
-                <RaisedButton onClick={this.handleOpen.bind(this)} label="Create" />
-                <Dialog
-                    title="Create an owner"
-                    actions={actions}
-                    modal={false}
-                    open={this.state.open}
-                    onRequestClose={this.handleClose}
-                >
-                    {inputs}
-                </Dialog>
+                <Button color="primary" onClick={this.toggle}>Create</Button>
+                <Modal isOpen={this.state.modal} toggle={this.toggle}>
+                    <ModalHeader toggle={this.toggle}>Create an owner</ModalHeader>
+                    <ModalBody>{inputs}</ModalBody>
+                    <ModalFooter>
+                        <Button onClick={this.handleSubmit} color="success">Create</Button>
+                    </ModalFooter>
+                </Modal>
             </div>
         )
     }

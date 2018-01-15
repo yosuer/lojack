@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AbmModel from './components/AbmModel';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import 'bootstrap/dist/css/bootstrap.css';
 
 const App = () => (
-    <MuiThemeProvider>
-        <AbmModel/>
-    </MuiThemeProvider>
+    <AbmModel/>
 );
 
 ReactDOM.render(<App />, document.getElementById('app'));

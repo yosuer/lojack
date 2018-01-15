@@ -1,8 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
-import UpdateDialog from './UpdateDialog'
-import RaisedButton from 'material-ui/RaisedButton';
+import UpdateDialog from './UpdateDialog';
+import {
+    Button,
+    Col,
+    Container,
+    FormGroup,
+    Input,
+    Label,
+    Pagination,
+    PaginationItem,
+    PaginationLink,
+    Row,
+    Table
+} from 'reactstrap';
 
 export default class OwnerList extends React.Component{
 
@@ -17,12 +27,11 @@ export default class OwnerList extends React.Component{
 
     handleInput(e) {
         e.preventDefault();
-        let pageSize = ReactDOM.findDOMNode(this.refs.pageSize).value;
+        let pageSize = this.inputPageSize.value;
         if (/^[0-9]+$/.test(pageSize)) {
             this.props.updatePageSize(pageSize);
         } else {
-            ReactDOM.findDOMNode(this.refs.pageSize).value =
-                pageSize.substring(0, pageSize.length - 1);
+            this.inputPageSize.value = pageSize.substring(0, pageSize.length - 1);
         }
     }
 
@@ -54,57 +63,90 @@ export default class OwnerList extends React.Component{
         let pageInfo = this.props.page.hasOwnProperty("number") ?
             <h3>Owners - Page {this.props.page.number + 1} of {this.props.page.totalPages}</h3> : null;
         let rowOwners = this.props.owners.map(owner =>
-            <TableRow key={owner.entity._links.self.href}>
-                <TableRowColumn>{owner.entity.fullName}</TableRowColumn>
-                <TableRowColumn>{owner.entity.phoneNumber}</TableRowColumn>
-                <TableRowColumn>{owner.entity.address}</TableRowColumn>
-                <TableRowColumn>{owner.entity.country}</TableRowColumn>
-                <TableRowColumn>{owner.entity.manager.name}</TableRowColumn>
-                <TableRowColumn>
-                    <UpdateDialog owner={owner}
-                                  attributes={this.props.attributes}
-                                  onUpdate={this.props.onUpdate}>
-                    </UpdateDialog>
-                    <RaisedButton onClick={this.handleDelete.bind(this, owner)} label="Delete" secondary={true}/>
-                </TableRowColumn>
-            </TableRow>
+            <tr key={owner.entity._links.self.href}>
+                <th scope="row">{owner.entity._links.self.href.split("/").pop()}</th>
+                <td>{owner.entity.fullName}</td>
+                <td>{owner.entity.phoneNumber}</td>
+                <td>{owner.entity.address}</td>
+                <td>{owner.entity.country}</td>
+                <td>{owner.entity.manager.name}</td>
+                <td>
+                   <Row>
+                        <UpdateDialog owner={owner}
+                                      attributes={this.props.attributes}
+                                      onUpdate={this.props.onUpdate}>
+                        </UpdateDialog>{' '}
+                        <Button color="danger" onClick={this.handleDelete.bind(this, owner)}>Delete</Button>
+                    </Row>
+                </td>
+            </tr>
         );
 
         let navLinks = [];
         if ("first" in this.props.links) {
-            navLinks.push(<button key="first" onClick={this.handleNavFirst}>&lt;&lt;</button>);
+            navLinks.push(
+                <PaginationItem key="first">
+                    <PaginationLink previous onClick={this.handleNavFirst}>&lt;&lt;</PaginationLink>
+                </PaginationItem>
+            );
         }
         if ("prev" in this.props.links) {
-            navLinks.push(<button key="prev" onClick={this.handleNavPrev}>&lt;</button>);
+            navLinks.push(
+                <PaginationItem key="prev">
+                    <PaginationLink previous onClick={this.handleNavPrev} />
+                </PaginationItem>
+            );
         }
         if ("next" in this.props.links) {
-            navLinks.push(<button key="next" onClick={this.handleNavNext}>&gt;</button>);
+            navLinks.push(
+                <PaginationItem key="next">
+                    <PaginationLink next onClick={this.handleNavNext} />
+                </PaginationItem>
+            );
         }
         if ("last" in this.props.links) {
-            navLinks.push(<button key="last" onClick={this.handleNavLast}>&gt;&gt;</button>);
+            navLinks.push(
+                <PaginationItem key="last">
+                    <PaginationLink previous onClick={this.handleNavLast}>&gt;&gt;</PaginationLink>
+                </PaginationItem>
+            );
         }
 
         return (
             <div>
                 {pageInfo}
-                <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHeaderColumn>FullName</TableHeaderColumn>
-                            <TableHeaderColumn>PhoneNumber</TableHeaderColumn>
-                            <TableHeaderColumn>Address</TableHeaderColumn>
-                            <TableHeaderColumn>Country</TableHeaderColumn>
-                            <TableHeaderColumn>Manager</TableHeaderColumn>
-                            <TableHeaderColumn>Actions</TableHeaderColumn>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
+                <FormGroup row>
+                    <Label for="inputPageSize" sm={1}>Page size</Label>
+                    <Col sm={1}>
+                        <Input innerRef={(input) => this.inputPageSize = input}
+                               type="select" name="select" id="inputPageSize" onChange={this.handleInput}>
+                            <option>5</option>
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                        </Input>
+                    </Col>
+                </FormGroup>
+                <Table striped>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>FullName</th>
+                            <th>PhoneNumber</th>
+                            <th>Address</th>
+                            <th>Country</th>
+                            <th>Manager</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         {rowOwners}
-                    </TableBody>
+                    </tbody>
                 </Table>
                 <div>
-                    {navLinks}
+                    <Pagination size="sm">
+                        {navLinks}
+                    </Pagination>
                 </div>
             </div>
 

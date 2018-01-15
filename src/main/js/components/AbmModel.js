@@ -5,6 +5,7 @@ import follow from './../follow';
 import when from 'when';
 import CreateDialog from './CreateDialog';
 import stompClient from './../websocket-listener';
+import {Container} from 'reactstrap';
 
 const root = '/api';
 
@@ -12,7 +13,7 @@ export default class AbmModel extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {owners: [], attributes: [], page: 1, pageSize: 3, links: {}};
+        this.state = {owners: [], attributes: [], page: 1, pageSize: 5, links: {}};
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
@@ -191,7 +192,7 @@ export default class AbmModel extends React.Component {
 
     render() {
         return (
-            <div>
+            <Container>
                 <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/>
                 <OwnerList page={this.state.page}
                            owners = {this.state.owners}
@@ -202,7 +203,7 @@ export default class AbmModel extends React.Component {
                            onDelete = {this.onDelete}
                            onUpdate = {this.onUpdate}
                            updatePageSize = {this.updatePageSize}/>
-            </div>
+            </Container>
         )
     }
 }
