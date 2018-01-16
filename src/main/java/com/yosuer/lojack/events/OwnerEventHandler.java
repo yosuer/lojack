@@ -41,19 +41,19 @@ public class OwnerEventHandler {
 	@HandleAfterCreate
 	public void newOwner(Owner owner) {
 		this.webSocket.convertAndSend(
-				MESSAGE_PREFIX + "/newOwner", getPath(owner));
+				MESSAGE_PREFIX + "/owners/new", getPath(owner));
 	}
 
 	@HandleAfterDelete
 	public void deleteOwner(Owner owner) {
 		this.webSocket.convertAndSend(
-				MESSAGE_PREFIX + "/deleteOwner", getPath(owner));
+				MESSAGE_PREFIX + "/owners/delete", getPath(owner));
 	}
 
 	@HandleAfterSave
 	public void updateOwner(Owner owner) {
 		this.webSocket.convertAndSend(
-				MESSAGE_PREFIX + "/updateOwner", getPath(owner));
+				MESSAGE_PREFIX + "/owners/update", getPath(owner));
 	}
 
 	/**

@@ -18,11 +18,11 @@ export default class CreateDialog extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        let newOwner = {};
+        let newItem = {};
         this.props.attributes.forEach(attribute => {
-            newOwner[attribute] = this['input-' + attribute].value.trim();
+            newItem[attribute] = this['input-' + attribute].value.trim();
         });
-        this.props.onCreate(newOwner);
+        this.props.onCreate(newItem);
         this.props.attributes.forEach(attribute => {
             this['input-' + attribute].value = '';
         });
@@ -46,7 +46,7 @@ export default class CreateDialog extends React.Component {
             <div>
                 <Button color="primary" onClick={this.toggle}>Create</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggle}>
-                    <ModalHeader toggle={this.toggle}>Create an owner</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>Create an item</ModalHeader>
                     <ModalBody>{inputs}</ModalBody>
                     <ModalFooter>
                         <Button onClick={this.handleSubmit} color="success">Create</Button>

@@ -1,5 +1,6 @@
-module.exports = function follow(api, rootPath, relArray) {
-    let root = api({
+module.exports = function follow(client, rootPath, relArray) {
+
+    let root = client({
         method: 'GET',
         path: rootPath
     });
@@ -20,12 +21,12 @@ module.exports = function follow(api, rootPath, relArray) {
             }
 
             if (typeof arrayItem === 'string') {
-                return api({
+                return client({
                     method: 'GET',
                     path: response.entity._links[rel].href
                 });
             } else {
-                return api({
+                return client({
                     method: 'GET',
                     path: response.entity._links[rel].href,
                     params: arrayItem.params

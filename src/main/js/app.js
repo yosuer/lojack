@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AbmModel from './components/AbmModel';
+import ModelAbm from './components/ModelAbm';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const App = () => (
-    <AbmModel/>
+    <ModelAbm model="owners"/>
 );
 
 ReactDOM.render(<App />, document.getElementById('app'));

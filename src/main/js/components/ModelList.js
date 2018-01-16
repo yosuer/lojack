@@ -1,20 +1,10 @@
 import React from 'react';
 import UpdateDialog from './UpdateDialog';
-import {
-    Button,
-    Col,
-    Container,
-    FormGroup,
-    Input,
-    Label,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    Row,
-    Table
-} from 'reactstrap';
+import CreateDialog from './CreateDialog';
 
-export default class OwnerList extends React.Component{
+import {Button, Col, FormGroup, Input, Label, Pagination, PaginationItem, PaginationLink, Row, Table} from 'reactstrap';
+
+export default class ModelList extends React.Component{
 
     constructor(props) {
         super(props);
@@ -55,28 +45,28 @@ export default class OwnerList extends React.Component{
         this.props.onNavigate(this.props.links.last.href);
     }
 
-    handleDelete(owner) {
-        this.props.onDelete(owner);
+    handleDelete(item) {
+        this.props.onDelete(item);
     }
 
     render() {
         let pageInfo = this.props.page.hasOwnProperty("number") ?
-            <h3>Owners - Page {this.props.page.number + 1} of {this.props.page.totalPages}</h3> : null;
-        let rowOwners = this.props.owners.map(owner =>
-            <tr key={owner.entity._links.self.href}>
-                <th scope="row">{owner.entity._links.self.href.split("/").pop()}</th>
-                <td>{owner.entity.fullName}</td>
-                <td>{owner.entity.phoneNumber}</td>
-                <td>{owner.entity.address}</td>
-                <td>{owner.entity.country}</td>
-                <td>{owner.entity.manager.name}</td>
+            <h3>Page {this.props.page.number + 1} of {this.props.page.totalPages}</h3> : null;
+        let rowItems = this.props.items.map(item =>
+            <tr key={item.entity._links.self.href}>
+                <th scope="row">{item.entity._links.self.href.split("/").pop()}</th>
+                <td>{item.entity.fullName}</td>
+                <td>{item.entity.phoneNumber}</td>
+                <td>{item.entity.address}</td>
+                <td>{item.entity.country}</td>
+                <td>{item.entity.manager.name}</td>
                 <td>
                    <Row>
-                        <UpdateDialog owner={owner}
+                        <UpdateDialog item={item}
                                       attributes={this.props.attributes}
                                       onUpdate={this.props.onUpdate}>
                         </UpdateDialog>{' '}
-                        <Button color="danger" onClick={this.handleDelete.bind(this, owner)}>Delete</Button>
+                        <Button color="danger" onClick={this.handleDelete.bind(this, item)}>Delete</Button>
                     </Row>
                 </td>
             </tr>
@@ -114,10 +104,10 @@ export default class OwnerList extends React.Component{
 
         return (
             <div>
-                {pageInfo}
                 <FormGroup row>
-                    <Label for="inputPageSize" sm={1}>Page size</Label>
-                    <Col sm={1}>
+                    <CreateDialog attributes={this.props.attributes} onCreate={this.props.onCreate}/>
+                    <Label for="inputPageSize" xs={{size: 1, offset: 9}}>Show</Label>
+                    <Col xs={1}>
                         <Input innerRef={(input) => this.inputPageSize = input}
                                type="select" name="select" id="inputPageSize" onChange={this.handleInput}>
                             <option>5</option>
@@ -140,14 +130,17 @@ export default class OwnerList extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {rowOwners}
+                        {rowItems}
                     </tbody>
                 </Table>
-                <div>
-                    <Pagination size="sm">
-                        {navLinks}
-                    </Pagination>
-                </div>
+                <Row>
+                    <Col xs="3">{pageInfo}</Col>
+                    <Col xs={{size: 2, offset:7}}>
+                        <Pagination size="sm">
+                            {navLinks}
+                        </Pagination>
+                    </Col>
+                </Row>
             </div>
 
         )
