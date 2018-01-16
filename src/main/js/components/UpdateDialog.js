@@ -20,20 +20,21 @@ export default class extends React.Component {
         e.preventDefault();
         let updatedItem = {};
         this.props.attributes.forEach(attribute =>
-            updatedItem[attribute] = this['input-'+attribute].value.trim()
+            updatedItem[attribute.title] = this['input-'+attribute.title].value.trim()
         );
         this.props.onUpdate(this.props.item, updatedItem);
         this.setState({modal: false})
     }
 
     render() {
-        let inputs = this.props.attributes.map(attribute =>
-            <FormGroup key={attribute + this.props.item.entity[attribute]} row>
-                <Label for={'input-' + attribute} sm={3}>{attribute}</Label>
+        let attrs = this.props.attributes;
+        let inputs = Object.keys(attrs).map(attribute =>
+            <FormGroup key={attrs[attribute].title + this.props.item.entity[attrs[attribute].title]} row>
+                <Label for={'input-' + attrs[attribute].title} sm={3}>{attrs[attribute].description}</Label>
                 <Col sm={8}>
-                    <Input innerRef={(input) => this['input-'+attribute] = input}
-                           defaultValue={this.props.item.entity[attribute]}
-                           id={'input-' + attribute} placeholder={attribute}/>
+                    <Input innerRef={(input) => this['input-'+attrs[attribute].title] = input}
+                           defaultValue={this.props.item.entity[attrs[attribute].title]}
+                           id={'input-' + attrs[attribute].title}/>
                 </Col>
             </FormGroup>
         );

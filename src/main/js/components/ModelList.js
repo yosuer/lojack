@@ -50,6 +50,7 @@ export default class ModelList extends React.Component{
     }
 
     render() {
+        let attrs = this.props.attributes;
         let pageInfo = this.props.page.hasOwnProperty("number") ?
             <h3>Page {this.props.page.number + 1} of {this.props.page.totalPages}</h3> : null;
         let rowItems = this.props.items.map(item =>

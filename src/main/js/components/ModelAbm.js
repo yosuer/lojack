@@ -108,7 +108,7 @@ export default class ModelAbm extends React.Component {
                 this.setState({
                     page: this.page,
                     items: results,
-                    attributes: Object.keys(this.schema.properties),
+                    attributes: this.schema.properties,
                     links: this.links,
                     pageSize: pageSize || this.state.pageSize
                 })
