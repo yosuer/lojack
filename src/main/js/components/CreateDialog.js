@@ -19,12 +19,13 @@ export default class CreateDialog extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         let newItem = {};
-        this.props.attributes.forEach(attribute => {
-            newItem[attribute.title] = this['input-' + attribute.title].value.trim();
-        });
+        let attrs = this.props.attributes;
+        Object.keys(attrs).forEach(attribute =>
+            newItem[attribute] = this['input-'+attribute].value.trim()
+        );
         this.props.onCreate(newItem);
-        this.props.attributes.forEach(attribute => {
-            this['input-' + attribute.title].value = '';
+        Object.keys(attrs).forEach(attribute => {
+            this['input-' + attribute].value = '';
         });
         this.setState({
             modal: false
@@ -34,11 +35,11 @@ export default class CreateDialog extends React.Component {
     render() {
         let attrs = this.props.attributes;
         let inputs = Object.keys(attrs).map(attribute =>
-            <FormGroup key={attrs[attribute].title} row>
-                <Label for={'input-' + attrs[attribute].title} sm={3}>{attrs[attribute].description}</Label>
+            <FormGroup key={attribute} row>
+                <Label for={'input-' + attribute} sm={3}>{attrs[attribute].description}</Label>
                 <Col sm={8}>
-                    <Input innerRef={(input) => this['input-'+attrs[attribute].title] = input}
-                           id={'input-' + attrs[attribute].title} placeholder={attrs[attribute].description}/>
+                    <Input innerRef={(input) => this['input-'+attribute] = input}
+                           id={'input-' + attribute} placeholder={attrs[attribute].description}/>
                 </Col>
             </FormGroup>
         );
