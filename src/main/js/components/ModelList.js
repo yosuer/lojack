@@ -13,6 +13,8 @@ export default class ModelList extends React.Component{
         this.handleNavNext = this.handleNavNext.bind(this);
         this.handleNavLast = this.handleNavLast.bind(this);
         this.handleInput = this.handleInput.bind(this);
+        this.renderHeaders = this.renderHeaders.bind(this);
+        this.renderItems = this.renderItems.bind(this);
     }
 
     handleInput(e) {
@@ -49,18 +51,27 @@ export default class ModelList extends React.Component{
         this.props.onDelete(item);
     }
 
+    renderHeaders() {
+        return this.props.fields.map(field =>
+            <th key={field}>
+                {this.props.attributes[field] ? this.props.attributes[field].description : null}
+            </th>
+        );
+    }
+
+    renderItems(entity) {
+        return this.props.fields.map(field =>
+            <td key={field}>{entity[field]}</td>
+        );
+    }
+
     render() {
-        let attrs = this.props.attributes;
         let pageInfo = this.props.page.hasOwnProperty("number") ?
             <h3>Page {this.props.page.number + 1} of {this.props.page.totalPages}</h3> : null;
         let rowItems = this.props.items.map(item =>
             <tr key={item.entity._links.self.href}>
                 <th scope="row">{item.entity._links.self.href.split("/").pop()}</th>
-                <td>{item.entity.fullName}</td>
-                <td>{item.entity.phoneNumber}</td>
-                <td>{item.entity.address}</td>
-                <td>{item.entity.country}</td>
-                <td>{item.entity.manager.name}</td>
+                {this.renderItems(item.entity)}
                 <td>
                    <Row>
                         <UpdateDialog item={item}
@@ -122,11 +133,7 @@ export default class ModelList extends React.Component{
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>FullName</th>
-                            <th>PhoneNumber</th>
-                            <th>Address</th>
-                            <th>Country</th>
-                            <th>Manager</th>
+                            {this.renderHeaders()}
                             <th>Actions</th>
                         </tr>
                     </thead>

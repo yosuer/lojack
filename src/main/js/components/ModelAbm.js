@@ -6,7 +6,7 @@ import when from 'when';
 import stompClient from '../utils/websocket-listener';
 import {Container} from 'reactstrap';
 
-const root = '/api';
+const rootPath = '/api';
 
 export default class ModelAbm extends React.Component {
 
@@ -24,9 +24,10 @@ export default class ModelAbm extends React.Component {
     }
 
     loadFromServer(pageSize) {
-        follow(client, root, [
-            {rel: this.props.model, params: {size: pageSize}}]
-        ).then(itemCollection => {
+        follow(client, rootPath, {
+            rel: this.props.model,
+            params: {size: pageSize}
+        }).then(itemCollection => {
             return client({
                 method: 'GET',
                 path: itemCollection.entity._links.profile.href,
@@ -40,8 +41,6 @@ export default class ModelAbm extends React.Component {
                 Object.keys(props).forEach(function (prop) {
                     if (props[prop].hasOwnProperty('format') && props[prop].format === 'uri') {
                         delete props[prop];
-                    } else if (props[prop].hasOwnProperty('$ref')) {
-                        delete props[prop];
                     }
                 });
                 this.schema = schema.entity;
@@ -51,7 +50,9 @@ export default class ModelAbm extends React.Component {
     }
 
     onCreate(newItem) {
-        follow(client, root, [this.props.model]).done(itemCollection => {
+        follow(client, rootPath, {
+            rel: this.props.model
+        }).done(itemCollection => {
             return client({
                 method: 'POST',
                 path: itemCollection.entity._links.self.href,
@@ -105,6 +106,7 @@ export default class ModelAbm extends React.Component {
 
         when.all(promises)
             .done(results => {
+                console.log('[ModelAbm] setState');
                 this.setState({
                     page: this.page,
                     items: results,
@@ -116,13 +118,13 @@ export default class ModelAbm extends React.Component {
     }
 
     refreshCurrentPage(message) {
-        follow(client, root, [{
+        follow(client, rootPath, {
             rel: this.props.model,
             params: {
                 size: this.state.pageSize,
                 page: this.state.page.number
             }
-        }]).then(this.loadCollection);
+        }).then(this.loadCollection);
     }
 
     onNavigate(navUri) {
@@ -133,10 +135,10 @@ export default class ModelAbm extends React.Component {
     }
 
     refreshAndGoToLastPage(message) {
-        follow(client, root, [{
+        follow(client, rootPath, {
             rel: this.props.model,
             params: {size: this.state.pageSize}
-        }]).done(response => {
+        }).done(response => {
             if (response.entity._links.last !== undefined) {
                 this.onNavigate(response.entity._links.last.href);
             } else {
@@ -155,6 +157,7 @@ export default class ModelAbm extends React.Component {
     }
 
     render() {
+        console.log('render ModelAbm');
         return (
             <Container>
                 <h1>Entity</h1>
@@ -163,6 +166,7 @@ export default class ModelAbm extends React.Component {
                            links = {this.state.links}
                            pageSize = {this.state.pageSize}
                            attributes={this.state.attributes}
+                           fields={this.props.fields}
                            onNavigate = {this.onNavigate}
                            onDelete = {this.onDelete}
                            onUpdate = {this.onUpdate}

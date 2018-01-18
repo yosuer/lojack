@@ -29,16 +29,19 @@ export default class extends React.Component {
 
     render() {
         let attrs = this.props.attributes;
-        let inputs = Object.keys(attrs).map(attribute =>
-            <FormGroup key={attribute + this.props.item.entity[attribute]} row>
-                <Label for={'input-' + attribute} sm={3}>{attrs[attribute].description}</Label>
-                <Col sm={8}>
-                    <Input innerRef={(input) => this['input-'+attribute] = input}
-                           defaultValue={this.props.item.entity[attribute]}
-                           id={'input-' + attribute}/>
-                </Col>
-            </FormGroup>
-        );
+        let inputs = Object.keys(attrs)
+            .filter(attribute => {
+                return typeof this.props.item.entity[attribute] !== 'object'
+            }).map(attribute =>
+                <FormGroup key={attribute + this.props.item.entity[attribute]} row>
+                    <Label for={'input-' + attribute} sm={3}>{attrs[attribute].description}</Label>
+                    <Col sm={8}>
+                        <Input innerRef={(input) => this['input-'+attribute] = input}
+                               defaultValue={this.props.item.entity[attribute]}
+                               id={'input-' + attribute}/>
+                    </Col>
+                </FormGroup>
+            );
 
         return (
             <div>

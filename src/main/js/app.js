@@ -4,7 +4,7 @@ import ModelAbm from './components/ModelAbm';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const App = () => (
-    <ModelAbm model="owners"/>
+    <ModelAbm model="owners" fields={['fullName', 'phoneNumber', 'address', 'country']}/>
 );
 
 ReactDOM.render(<App />, document.getElementById('app'));
