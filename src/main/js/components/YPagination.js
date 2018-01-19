@@ -45,7 +45,7 @@ export default class YPagination extends React.Component{
     render() {
         console.log('render YPagination');
         let pageInfo = this.props.page.hasOwnProperty("number") ?
-            <h3>Page {this.props.page.number + 1} of {this.props.page.totalPages}</h3> : null;
+            <h4>Page {this.props.page.number + 1} of {this.props.page.totalPages}</h4> : null;
 
         let navLinks = [];
         if ("first" in this.props.links) {
@@ -84,8 +84,8 @@ export default class YPagination extends React.Component{
                         {navLinks}
                     </Pagination>
                 </Col>
-                <Col xs={{size: 3, offset: 1}}>{pageInfo}</Col>
-                <Label for="inputPageSize" xs={{size: 1, offset: 3}}>Mostrando</Label>
+                <Col xs={{size: 3, offset: 2}}>{pageInfo}</Col>
+                <Label for="inputPageSize" xs={{size: 1, offset: 2}}>Mostrando</Label>
                 <Col xs={1}>
                     <Input innerRef={(input) => this.inputPageSize = input}
                            type="select" name="select" id="inputPageSize" onChange={this.handleInput}>
