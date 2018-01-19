@@ -5,8 +5,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import com.yosuer.lojack.domain.Employee;
 import com.yosuer.lojack.domain.Manager;
 import com.yosuer.lojack.domain.Owner;
+import com.yosuer.lojack.repository.EmployeeRepository;
 import com.yosuer.lojack.repository.ManagerRepository;
 import com.yosuer.lojack.repository.OwnerRepository;
 
@@ -15,14 +17,26 @@ public class DataBaseLoader implements CommandLineRunner {
 
 	private final OwnerRepository ownerRepository;
 	private final ManagerRepository managerRepository;
+	private final EmployeeRepository employeeRepository;
 
-	public DataBaseLoader(OwnerRepository ownerRepository, ManagerRepository managerRepository) {
+	public DataBaseLoader(OwnerRepository ownerRepository, ManagerRepository managerRepository,
+			EmployeeRepository employeeRepository) {
 		this.ownerRepository = ownerRepository;
 		this.managerRepository = managerRepository;
+		this.employeeRepository = employeeRepository;
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
+		Employee employee1 = Employee.builder()
+				.withDocument("111111")
+				.withCode("2232323")
+				.withFirstName("asdasd")
+				.withAddress("addresss")
+				.build();
+
+		employeeRepository.save(employee1);
+
 		Manager greg = managerRepository.save(new Manager("greg", "pass1",
 				"ROLE_MANAGER"));
 		Manager oliver = managerRepository.save(new Manager("oliver", "pass2",

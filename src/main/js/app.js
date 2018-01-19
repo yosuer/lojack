@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ModelAbm from './components/ModelAbm';
+import Manager from "./components/Manager";
 import 'bootstrap/dist/css/bootstrap.css';
 
 const App = () => (
-    <ModelAbm model="owners" fields={['fullName', 'phoneNumber', 'address', 'country']}/>
+    <Manager/>
 );
 
 ReactDOM.render(<App />, document.getElementById('app'));
