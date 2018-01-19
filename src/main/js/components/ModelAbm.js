@@ -5,6 +5,7 @@ import follow from '../utils/follow';
 import when from 'when';
 import stompClient from '../utils/websocket-listener';
 import {Container} from 'reactstrap';
+import CreateDialog from './CreateDialog';
 
 const rootPath = '/api';
 
@@ -33,10 +34,6 @@ export default class ModelAbm extends React.Component {
                 path: itemCollection.entity._links.profile.href,
                 headers: {'Accept': 'application/schema+json'}
             }).then(schema => {
-                /**
-                 * Filter unneeded JSON Schema properties, like uri references and
-                 * subtypes ($ref).
-                 */
                 let props = schema.entity.properties;
                 Object.keys(props).forEach(function (prop) {
                     if (props[prop].hasOwnProperty('format') && props[prop].format === 'uri') {
@@ -160,7 +157,8 @@ export default class ModelAbm extends React.Component {
         console.log('render ModelAbm');
         return (
             <Container>
-                <h1>Entity</h1>
+                <h1>{this.props.model}</h1>{' '}
+                <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/>
                 <ModelList page={this.state.page}
                            items = {this.state.items}
                            links = {this.state.links}
@@ -170,7 +168,6 @@ export default class ModelAbm extends React.Component {
                            onNavigate = {this.onNavigate}
                            onDelete = {this.onDelete}
                            onUpdate = {this.onUpdate}
-                           onCreate = {this.onCreate}
                            updatePageSize = {this.updatePageSize}/>
             </Container>
         )

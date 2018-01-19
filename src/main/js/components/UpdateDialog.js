@@ -20,9 +20,13 @@ export default class extends React.Component {
         e.preventDefault();
         let updatedItem = {};
         let attrs = this.props.attributes;
-        Object.keys(attrs).forEach(attribute =>
-            updatedItem[attribute] = this['input-'+attribute].value.trim()
-        );
+
+        Object.keys(attrs)
+            .filter(attribute => {
+                return typeof this.props.item.entity[attribute] !== 'object'
+            }).forEach(attribute => {
+                updatedItem[attribute] = this['input-'+attribute].value.trim()
+            });
         this.props.onUpdate(this.props.item, updatedItem);
         this.setState({modal: false})
     }

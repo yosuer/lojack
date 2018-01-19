@@ -19,14 +19,15 @@ export default class CreateDialog extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         let newItem = {};
-        let attrs = this.props.attributes;
-        Object.keys(attrs).forEach(attribute =>
-            newItem[attribute] = this['input-'+attribute].value.trim()
-        );
+        let attrs = Object.keys(this.props.attributes)
+            .filter(attribute => {
+                return this.props.attributes[attribute].type !== 'object'
+            });
+
+        attrs.forEach(attribute => newItem[attribute] = this['input-'+attribute].value.trim());
         this.props.onCreate(newItem);
-        Object.keys(attrs).forEach(attribute => {
-            this['input-' + attribute].value = '';
-        });
+        attrs.forEach(attribute => this['input-' + attribute].value = '');
+
         this.setState({
             modal: false
         });
@@ -34,15 +35,18 @@ export default class CreateDialog extends React.Component {
 
     render() {
         let attrs = this.props.attributes;
-        let inputs = Object.keys(attrs).map(attribute =>
-            <FormGroup key={attribute} row>
-                <Label for={'input-' + attribute} sm={3}>{attrs[attribute].description}</Label>
-                <Col sm={8}>
-                    <Input innerRef={(input) => this['input-'+attribute] = input}
-                           id={'input-' + attribute} placeholder={attrs[attribute].description}/>
-                </Col>
-            </FormGroup>
-        );
+        let inputs = Object.keys(attrs)
+            .filter(attribute => {
+                return this.props.attributes[attribute].type !== 'object'
+            }).map(attribute =>
+                <FormGroup key={attribute} row>
+                    <Label for={'input-' + attribute} sm={3}>{attrs[attribute].description}</Label>
+                    <Col sm={8}>
+                        <Input innerRef={(input) => this['input-'+attribute] = input}
+                               id={'input-' + attribute} placeholder={attrs[attribute].description}/>
+                    </Col>
+                </FormGroup>
+            );
 
         return (
             <div>
