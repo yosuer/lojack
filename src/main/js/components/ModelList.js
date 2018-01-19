@@ -10,6 +10,7 @@ export default class ModelList extends React.Component{
     }
 
     render() {
+        console.log('render ModelList');
         return (
             <div>
                 <Table striped>
@@ -33,7 +34,6 @@ export default class ModelList extends React.Component{
                 <YPagination links={this.props.links} page={this.props.page}
                              onNavigate={this.props.onNavigate} updatePageSize={this.props.updatePageSize}/>
             </div>
-
         )
     }
 }

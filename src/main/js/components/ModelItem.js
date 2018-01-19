@@ -18,8 +18,7 @@ export default class ModelItem extends React.Component{
             <tr>
                 <th scope="row">{this.props.item.entity._links.self.href.split("/").pop()}</th>
                 {this.props.fields.map(field =>
-                        <td key={field}>{this.props.item.entity[field]}</td>
-                )}
+                        <td key={field}>{this.props.item.entity[field]}</td>)}
                 <td>
                     <Row>
                         <UpdateDialog item={this.props.item}

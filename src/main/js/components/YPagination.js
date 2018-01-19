@@ -43,7 +43,7 @@ export default class YPagination extends React.Component{
     }
 
     render() {
-
+        console.log('render YPagination');
         let pageInfo = this.props.page.hasOwnProperty("number") ?
             <h3>Page {this.props.page.number + 1} of {this.props.page.totalPages}</h3> : null;
 
@@ -76,7 +76,6 @@ export default class YPagination extends React.Component{
                 </PaginationItem>
             );
         }
-
 
         return (
             <FormGroup row>
